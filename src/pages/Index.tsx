@@ -223,7 +223,8 @@ export default function Index() {
           <img
             src="https://cdn.poehali.dev/projects/a871e631-0b8d-4a2e-acfd-b0a7e12db312/bucket/d5bd26f3-eed7-49d8-a526-4752d02ad7eb.png"
             alt="АвтоклавПром"
-            className="h-10 w-auto object-contain drop-shadow-lg"
+            className="h-16 w-auto object-contain"
+            style={{ mixBlendMode: "screen", filter: "brightness(1.15) contrast(1.1)" }}
           />
         </button>
 
