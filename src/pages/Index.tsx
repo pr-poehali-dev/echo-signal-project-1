@@ -218,14 +218,29 @@ export default function Index() {
       >
         <button
           onClick={() => scrollToSection(0)}
-          className="flex items-center gap-2 transition-transform hover:scale-105"
+          className="flex items-center gap-3 transition-transform hover:scale-105"
         >
-          <img
-            src="https://cdn.poehali.dev/projects/a871e631-0b8d-4a2e-acfd-b0a7e12db312/bucket/d5bd26f3-eed7-49d8-a526-4752d02ad7eb.png"
-            alt="АвтоклавПром"
-            className="h-16 w-auto object-contain"
-            style={{ mixBlendMode: "screen", filter: "brightness(1.15) contrast(1.1)" }}
-          />
+          <div className="relative h-12 w-12 overflow-hidden rounded-xl shrink-0"
+            style={{ background: "transparent" }}
+          >
+            <img
+              src="https://cdn.poehali.dev/projects/a871e631-0b8d-4a2e-acfd-b0a7e12db312/bucket/d5bd26f3-eed7-49d8-a526-4752d02ad7eb.png"
+              alt="АвтоклавПром"
+              className="absolute object-cover"
+              style={{
+                width: "220%",
+                height: "220%",
+                top: "-28%",
+                left: "-18%",
+                mixBlendMode: "multiply",
+                filter: "contrast(1.1)",
+              }}
+            />
+          </div>
+          <div className="flex flex-col leading-tight">
+            <span className="font-sans text-lg font-bold tracking-tight text-foreground leading-none">Автоклав<span style={{color:"#e19136"}}>Пром</span></span>
+            <span className="font-mono text-[10px] text-foreground/50 tracking-widest uppercase">Промышленное оборудование</span>
+          </div>
         </button>
 
         <div className="hidden items-center gap-8 md:flex">
