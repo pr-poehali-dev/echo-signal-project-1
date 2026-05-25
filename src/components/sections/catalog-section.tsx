@@ -1,6 +1,17 @@
-import { useState } from "react"
+import { useState, type FormEvent } from "react"
 import { useReveal } from "@/hooks/use-reveal"
 import { MagneticButton } from "@/components/magnetic-button"
+
+const API_URL = "https://functions.poehali.dev/faa878fe-7c68-4184-9760-7cdeb506f4d5"
+
+async function sendRequest(data: { name: string; email: string; message: string; product: string }) {
+  const res = await fetch(API_URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  })
+  return res.ok
+}
 
 const CATEGORIES = ["Все", "Автоклавы и стерилизаторы", "Комплектующие и аксессуары", "Термодымовые камеры", "Молочная промышленность", "Мясная промышленность", "Рыбная промышленность"]
 
@@ -92,13 +103,95 @@ const PRODUCTS = [
   { id: 80, name: "Комплект нарезки и фасовки рыбных пресервов ИПКС-074", capacity: "1000 банок/ч", category: "Рыбная промышленность" },
 ]
 
+function RequestModal({ product, onClose }: { product: string; onClose: () => void }) {
+  const [form, setForm] = useState({ name: "", email: "", message: "" })
+  const [loading, setLoading] = useState(false)
+  const [success, setSuccess] = useState(false)
+
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault()
+    setLoading(true)
+    const ok = await sendRequest({ ...form, product })
+    setLoading(false)
+    if (ok) setSuccess(true)
+  }
+
+  return (
+    <div className="fixed inset-0 z-[100] flex items-center justify-center px-4" onClick={onClose}>
+      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
+      <div
+        className="relative w-full max-w-md rounded-2xl border border-foreground/10 bg-background/90 p-6 backdrop-blur-xl md:p-8"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {success ? (
+          <div className="text-center py-6">
+            <p className="text-2xl font-light text-foreground mb-2">Заявка отправлена!</p>
+            <p className="font-mono text-sm text-foreground/60 mb-6">Мы свяжемся с вами в ближайшее время.</p>
+            <MagneticButton variant="secondary" onClick={onClose}>Закрыть</MagneticButton>
+          </div>
+        ) : (
+          <>
+            <div className="mb-5">
+              <p className="font-mono text-xs text-foreground/50 mb-1">Запрос на товар</p>
+              <p className="text-sm font-light text-foreground leading-snug">{product}</p>
+            </div>
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div>
+                <label className="mb-1 block font-mono text-xs text-foreground/60">Имя</label>
+                <input
+                  type="text" required
+                  value={form.name}
+                  onChange={(e) => setForm({ ...form, name: e.target.value })}
+                  className="w-full border-b border-foreground/30 bg-transparent py-1.5 text-sm text-foreground placeholder:text-foreground/40 focus:border-foreground/60 focus:outline-none"
+                  placeholder="Ваше имя"
+                />
+              </div>
+              <div>
+                <label className="mb-1 block font-mono text-xs text-foreground/60">Email</label>
+                <input
+                  type="email" required
+                  value={form.email}
+                  onChange={(e) => setForm({ ...form, email: e.target.value })}
+                  className="w-full border-b border-foreground/30 bg-transparent py-1.5 text-sm text-foreground placeholder:text-foreground/40 focus:border-foreground/60 focus:outline-none"
+                  placeholder="your@email.com"
+                />
+              </div>
+              <div>
+                <label className="mb-1 block font-mono text-xs text-foreground/60">Комментарий</label>
+                <textarea
+                  rows={2}
+                  value={form.message}
+                  onChange={(e) => setForm({ ...form, message: e.target.value })}
+                  className="w-full border-b border-foreground/30 bg-transparent py-1.5 text-sm text-foreground placeholder:text-foreground/40 focus:border-foreground/60 focus:outline-none"
+                  placeholder="Объём, количество, особые требования..."
+                />
+              </div>
+              <div className="flex gap-3 pt-2">
+                <MagneticButton variant="primary" size="lg" className="flex-1">
+                  {loading ? "Отправка..." : "Отправить запрос"}
+                </MagneticButton>
+                <button type="button" onClick={onClose} className="font-mono text-xs text-foreground/50 hover:text-foreground px-3">
+                  Отмена
+                </button>
+              </div>
+            </form>
+          </>
+        )}
+      </div>
+    </div>
+  )
+}
+
 export function CatalogSection({ scrollToSection }: { scrollToSection?: (index: number) => void }) {
   const { ref, isVisible } = useReveal(0.15)
   const [activeCategory, setActiveCategory] = useState("Все")
+  const [modalProduct, setModalProduct] = useState<string | null>(null)
 
   const filtered = activeCategory === "Все" ? PRODUCTS : PRODUCTS.filter((p) => p.category === activeCategory)
 
   return (
+    <>
+    {modalProduct && <RequestModal product={modalProduct} onClose={() => setModalProduct(null)} />}
     <section
       ref={ref}
       className="flex h-screen w-screen shrink-0 snap-start flex-col px-6 pt-20 pb-8 md:px-12 md:pt-24 lg:px-16"
@@ -162,7 +255,7 @@ export function CatalogSection({ scrollToSection }: { scrollToSection?: (index: 
                 <div className="flex items-center gap-3 shrink-0 ml-4 md:gap-6">
                   <span className="font-mono text-xs text-foreground/50 whitespace-nowrap">по запросу</span>
                   <button
-                    onClick={() => scrollToSection?.(5)}
+                    onClick={() => setModalProduct(product.name)}
                     className="hidden rounded-full border border-foreground/20 px-3 py-1 font-mono text-xs text-foreground/60 opacity-0 transition-all duration-200 group-hover:opacity-100 hover:border-foreground/50 hover:text-foreground md:block"
                   >
                     Запрос
@@ -186,5 +279,6 @@ export function CatalogSection({ scrollToSection }: { scrollToSection?: (index: 
         </div>
       </div>
     </section>
+    </>
   )
 }

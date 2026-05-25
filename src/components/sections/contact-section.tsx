@@ -3,6 +3,8 @@ import { useReveal } from "@/hooks/use-reveal"
 import { useState, type FormEvent } from "react"
 import { MagneticButton } from "@/components/magnetic-button"
 
+const API_URL = "https://functions.poehali.dev/faa878fe-7c68-4184-9760-7cdeb506f4d5"
+
 export function ContactSection() {
   const { ref, isVisible } = useReveal(0.3)
   const [formData, setFormData] = useState({ name: "", email: "", message: "" })
@@ -11,23 +13,20 @@ export function ContactSection() {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-
-    // Basic validation
-    if (!formData.name || !formData.email || !formData.message) {
-      return
-    }
-
+    if (!formData.name || !formData.email || !formData.message) return
     setIsSubmitting(true)
-
-    // Simulate form submission (replace with actual API call later)
-    await new Promise((resolve) => setTimeout(resolve, 1500))
-
-    setIsSubmitting(false)
-    setSubmitSuccess(true)
-    setFormData({ name: "", email: "", message: "" })
-
-    // Reset success message after 5 seconds
-    setTimeout(() => setSubmitSuccess(false), 5000)
+    try {
+      await fetch(API_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...formData, product: "" }),
+      })
+    } finally {
+      setIsSubmitting(false)
+      setSubmitSuccess(true)
+      setFormData({ name: "", email: "", message: "" })
+      setTimeout(() => setSubmitSuccess(false), 5000)
+    }
   }
 
   return (
