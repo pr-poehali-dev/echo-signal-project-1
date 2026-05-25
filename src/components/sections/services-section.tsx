@@ -17,29 +17,29 @@ export function ServicesSection() {
           <h2 className="mb-2 font-sans text-5xl font-light tracking-tight text-foreground md:text-6xl lg:text-7xl">
             Услуги
           </h2>
-          <p className="font-mono text-sm text-foreground/60 md:text-base">/ Наши компетенции</p>
+          <p className="font-mono text-sm text-foreground/60 md:text-base">/ Полный цикл от производства до запуска</p>
         </div>
 
         <div className="grid gap-8 md:grid-cols-2 md:gap-x-16 md:gap-y-12 lg:gap-x-24">
           {[
             {
-              title: "Веб-разработка",
-              description: "Создание современных веб-приложений любой сложности",
+              title: "Изготовление под заказ",
+              description: "Подбираем объём, тип нагрева, материал корпуса и систему управления под задачи вашего предприятия",
               direction: "top",
             },
             {
-              title: "UI/UX Дизайн",
-              description: "Проектирование удобных и красивых интерфейсов",
+              title: "Монтаж и пусконаладка",
+              description: "Поставка, монтаж, настройка режимов стерилизации и ввод оборудования в эксплуатацию",
               direction: "right",
             },
             {
-              title: "Мобильные приложения",
-              description: "Кроссплатформенная разработка для iOS и Android",
+              title: "Обучение персонала",
+              description: "Подготовка операторов и технологов для самостоятельной работы с оборудованием",
               direction: "left",
             },
             {
-              title: "Консалтинг",
-              description: "Техническая экспертиза и стратегическое планирование",
+              title: "Постпродажное сопровождение",
+              description: "Консультации по установке, наладке и эксплуатации на всём сроке службы автоклава",
               direction: "bottom",
             },
           ].map((service, i) => (
