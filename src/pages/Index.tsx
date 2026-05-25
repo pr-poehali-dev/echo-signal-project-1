@@ -220,10 +220,11 @@ export default function Index() {
           onClick={() => scrollToSection(0)}
           className="flex items-center gap-2 transition-transform hover:scale-105"
         >
-          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-foreground/15 backdrop-blur-md transition-all duration-300 hover:scale-110 hover:bg-foreground/25">
-            <span className="font-sans text-xl font-bold text-foreground">А</span>
-          </div>
-          <span className="font-sans text-xl font-semibold tracking-tight text-foreground">АвтоклавПром</span>
+          <img
+            src="https://cdn.poehali.dev/projects/a871e631-0b8d-4a2e-acfd-b0a7e12db312/bucket/d5bd26f3-eed7-49d8-a526-4752d02ad7eb.png"
+            alt="АвтоклавПром"
+            className="h-10 w-auto object-contain drop-shadow-lg"
+          />
         </button>
 
         <div className="hidden items-center gap-8 md:flex">
